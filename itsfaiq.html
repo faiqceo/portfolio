@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio</title>
+    <title>Faiq — Product-minded engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="site-shell">
     <!-- Navigation -->
     <nav id="site-nav" aria-label="Primary">
       <div class="nav-inner">
@@ -134,7 +135,7 @@
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </a>
-          <a href="#contact" class="hero-link">Get in touch</a>
+          <a href="#ask" class="hero-link">Ask me anything</a>
         </div>
       </div>
     </section>
@@ -1033,6 +1034,116 @@
       </div>
     </footer>
 
+    <section class="ask-section" id="ask" aria-labelledby="ask-title" data-ai-endpoint="/api/ask">
+      <div class="ask-inner">
+        <div class="ask-kicker"><span class="hero-status-dot"></span> A LITTLE ABOUT ME</div>
+        <h2 id="ask-title">What do you want to know?</h2>
+        <p class="ask-intro">Ask about my work, the projects I’ve built, or my GitHub activity.</p>
+        <div class="ask-suggestions" aria-label="Suggested questions">
+          <button type="button" data-question="What do you do?">What do you do?</button>
+          <button type="button" data-question="Show me your projects">My projects</button>
+          <button type="button" data-question="What's your email?">Your email</button>
+          <button type="button" data-question="What have you been building on GitHub?">GitHub activity</button>
+        </div>
+        <div class="ask-chat" aria-live="polite" aria-label="Conversation">
+          <div class="ask-message ask-answer"><span class="ask-avatar">AI</span><p>Hey, I’m Faiq’s portfolio assistant. Ask me about my work, projects, or GitHub. For GitHub activity, share my profile link so I can look up public events.</p></div>
+        </div>
+        <form class="ask-form" id="ask-form">
+          <label class="sr-only" for="ask-input">Ask me anything about my work</label>
+          <input id="ask-input" name="question" type="text" placeholder="Ask me anything about my work…" autocomplete="off" required />
+          <button type="submit" aria-label="Send question"><span>Ask</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </form>
+        <p class="ask-footnote">Answers are based on the information on this site and public GitHub activity.</p>
+      </div>
+    </section>
+    </div>
     <script src="script.js"></script>
+    <script>
+      (() => {
+        const ask = document.querySelector('#ask');
+        const hero = document.querySelector('#hero');
+        if (ask && hero) hero.after(ask);
+
+        const form = document.querySelector('#ask-form');
+        const input = document.querySelector('#ask-input');
+        const chat = document.querySelector('.ask-chat');
+        const endpoint = ask?.dataset.aiEndpoint;
+        let githubUser = '';
+        let lastQuestion = '';
+        const facts = {
+          work: 'Faiq is a full-stack engineer and UI/UX designer who builds thoughtful web and mobile products, from interface design through deployment.',
+          projects: 'A few projects to explore: NEPOGAMES, a game account marketplace with escrow; ESCROWGO, a peer-to-peer escrow and delivery platform; XAAM, a digital payments app; and TUTORLY, a WhatsApp opportunities bot.',
+          contact: 'You can reach Faiq at quadrishola03@gmail.com. He is open to freelance work, contracts, and full-time roles.',
+          github: 'I can summarize recent public GitHub activity. Send a GitHub profile URL (github.com/username) and I’ll look up its public events. GitHub does not expose a complete contributions history through this public events feed.'
+        };
+        const addMessage = (text, kind) => {
+          const row = document.createElement('div'); row.className = `ask-message ask-${kind}`;
+          if (kind === 'answer') { const badge = document.createElement('span'); badge.className = 'ask-avatar'; badge.textContent = 'AI'; row.append(badge); }
+          const p = document.createElement('p');
+          const email = kind === 'answer' && text.match(/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i);
+          if (email) {
+            const start = text.indexOf(email[0]); p.append(document.createTextNode(text.slice(0, start)));
+            const link = document.createElement('a'); link.href = `mailto:${email[0]}`; link.textContent = email[0]; p.append(link, document.createTextNode(text.slice(start + email[0].length)));
+          } else p.textContent = text;
+          row.append(p); chat.append(row);
+          if (kind === 'answer') {
+            const followups = document.createElement('div'); followups.className = 'ask-followups';
+            const label = document.createElement('span'); label.textContent = 'FOLLOW-UPS'; followups.append(label);
+            const options = /github|commit|contribut|activity/i.test(lastQuestion)
+              ? ['Show me your projects', "What's your email?"]
+              : /email|contact|reach|hire/i.test(lastQuestion)
+                ? ['Show me your projects', 'What have you been building on GitHub?']
+                : ['Tell me about NEPOGAMES', "What's your email?", 'What have you been building on GitHub?'];
+            options.forEach(question => { const button = document.createElement('button'); button.type = 'button'; button.className = 'ask-followup'; button.textContent = question; button.dataset.question = question; followups.append(button); });
+            chat.append(followups);
+          }
+          row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+        const answer = async (question) => {
+          const gh = question.match(/github\.com\/([a-z\d-]+)/i);
+          if (gh) githubUser = gh[1];
+          if (endpoint) {
+            try {
+              const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, githubUser }) });
+              if (!response.ok) throw new Error('Assistant endpoint unavailable');
+              const data = await response.json(); if (data.answer) return data.answer;
+            } catch { /* Keep grounded portfolio answers available during local preview. */ }
+          }
+          if (/github|commit|contribut|activity|code lately/i.test(question)) {
+            if (githubUser) {
+              try {
+                const response = await fetch(`https://api.github.com/users/${encodeURIComponent(githubUser)}/events/public`, { headers: { Accept: 'application/vnd.github+json' } });
+                if (!response.ok) throw new Error('GitHub profile lookup failed');
+                const events = await response.json();
+                const pushes = events.filter(event => event.type === 'PushEvent');
+                const repos = [...new Set(events.map(event => event.repo?.name).filter(Boolean))].slice(0, 4);
+                if (!events.length) return `I couldn’t find recent public events for @${githubUser}. Their activity may be private or quiet recently.`;
+                return `I found ${events.length} recent public GitHub events for @${githubUser}, including ${pushes.length} push events. Recent repositories: ${repos.join(', ') || 'none listed'}. This feed only covers recent public activity, not all commits.`;
+              } catch { return `I couldn’t load public GitHub activity for @${githubUser} right now. You can still visit github.com/${githubUser} to explore the profile.`; }
+            }
+            return facts.github;
+          }
+          if (/contact|email|reach|hire/i.test(question)) return facts.contact;
+          if (/nepogames/i.test(question)) return 'NEPOGAMES is a game account marketplace designed to reduce peer-to-peer scams with escrow payments, seller chat, and a dispute system.';
+          if (/escrowgo/i.test(question)) return 'ESCROWGO is a peer-to-peer escrow and delivery platform. Payment is held until the buyer confirms delivery with a QR scan.';
+          if (/xaam/i.test(question)) return 'XAAM is a digital payments app with NFC tap-to-pay, QR scanning, and phone number transfers. It won first place at Techfest 5.0.';
+          if (/tutorly/i.test(question)) return 'TUTORLY is a WhatsApp bot that shares curated tech jobs, hackathons, fellowships, and opportunities.';
+          if (/project|work|built|portfolio|case stud/i.test(question)) return facts.projects;
+          if (/what do you|who are|about|skill|experience/i.test(question)) return facts.work;
+          return 'I can help with Faiq’s projects, experience, contact details, and public GitHub activity. What would you like to know?';
+        };
+        const submit = async (question) => {
+          const cleaned = question.trim(); if (!cleaned) return;
+          chat.querySelector('.ask-followups')?.remove();
+          lastQuestion = cleaned;
+          addMessage(cleaned, 'user');
+          input.value = ''; input.disabled = true;
+          const pending = document.createElement('div'); pending.className = 'ask-message ask-answer ask-pending'; pending.innerHTML = '<span class="ask-avatar">AI</span><p>Thinking…</p>'; chat.append(pending);
+          const result = await answer(cleaned); pending.remove(); addMessage(result, 'answer'); input.disabled = false; input.focus();
+        };
+        form?.addEventListener('submit', event => { event.preventDefault(); submit(input.value); });
+        document.addEventListener('click', event => { const button = event.target.closest('[data-question]'); if (button) submit(button.dataset.question); });
+      })();
+    </script>
   </body>
 </html>
