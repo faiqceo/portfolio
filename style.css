@@ -3006,6 +3006,7 @@ body.profile-body {
   font-weight: 460;
   line-height: 1.2;
   opacity: 1;
+  text-transform: none;
   transition: opacity 240ms ease-in-out;
 }
 
