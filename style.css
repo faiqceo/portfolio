@@ -3193,6 +3193,11 @@ body.profile-body {
   font-size: 14px;
 }
 
+.project-article strong {
+  color: #1768c1;
+  font-weight: 500;
+}
+
 .project-article-header {
   margin-bottom: 8px;
 }
@@ -3225,6 +3230,35 @@ body.profile-body {
   font-size: 14px;
   font-weight: 560;
   line-height: 20px;
+}
+
+.project-feature-list {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-feature-list li {
+  padding-left: 12px;
+  border-left: 2px solid #b9d8f4;
+  color: #444;
+  line-height: 20px;
+}
+
+.project-live-link {
+  color: #1768c1;
+  text-decoration: underline;
+  text-decoration-color: #b9d8f4;
+  text-underline-offset: 3px;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 28px;
 }
 
 .project-figure {
