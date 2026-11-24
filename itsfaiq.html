@@ -15,7 +15,7 @@
   <body>
     <div class="site-shell">
     <!-- Navigation -->
-    <nav id="site-nav" aria-label="Primary">
+    <nav id="site-nav" aria-label="Primary" hidden>
       <div class="nav-inner">
         <a href="#hero" class="nav-icon-btn" aria-label="Home">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -100,43 +100,7 @@
         <!-- Each line is a masked row: the inner span starts pushed fully below
            its own overflow:hidden parent and rises into place, so the type
            appears to wipe up from the baseline rather than just fade in. -->
-        <h1 class="hero-title">
-          <span class="hero-line"
-            ><span class="hero-line-inner"
-              >I <span class="hero-name">design &amp; develop</span></span
-            ></span
-          >
-          <span class="hero-line"
-            ><span class="hero-line-inner"
-              >products that make impact<span class="hero-dot">.</span></span
-            ></span
-          >
-        </h1>
-
-        <p class="hero-sub anim-item">
-          I&rsquo;m a full-stack engineer and UI/UX designer focused on
-          designing and building thoughtful digital products. From intuitive
-          interfaces to scalable web applications, I bring design and
-          development together.
-        </p>
-
-        <div class="hero-actions anim-item">
-          <a href="#projects" class="hero-btn hero-btn-solid">
-            Selected work
-            <svg
-              class="hero-btn-arrow"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </a>
-          <a href="#ask" class="hero-link">Ask me anything</a>
-        </div>
+        <p class="hero-note">Faiq’s portfolio · Selected work and answers</p>
       </div>
     </section>
 
@@ -1138,8 +1102,16 @@
           lastQuestion = cleaned;
           addMessage(cleaned, 'user');
           input.value = ''; input.disabled = true;
-          const pending = document.createElement('div'); pending.className = 'ask-message ask-answer ask-pending'; pending.innerHTML = '<span class="ask-avatar">AI</span><p>Thinking…</p>'; chat.append(pending);
-          const result = await answer(cleaned); pending.remove(); addMessage(result, 'answer'); input.disabled = false; input.focus();
+          const pending = document.createElement('div'); pending.className = 'ask-message ask-answer ask-pending';
+          const badge = document.createElement('span'); badge.className = 'ask-avatar'; badge.textContent = 'AI';
+          const status = document.createElement('p'); status.textContent = 'Reading the question…'; pending.append(badge, status); chat.append(pending);
+          const stages = ['Reading the question…', 'Checking the projects and details…', 'Writing a reply…'];
+          let stage = 0;
+          const loading = window.setInterval(() => { stage = (stage + 1) % stages.length; status.textContent = stages[stage]; }, 900);
+          let result;
+          try { result = await answer(cleaned); }
+          catch { result = 'Sorry, I couldn’t get an answer just now. Please try again.'; }
+          window.clearInterval(loading); pending.remove(); addMessage(result, 'answer'); input.disabled = false; input.focus();
         };
         form?.addEventListener('submit', event => { event.preventDefault(); submit(input.value); });
         document.addEventListener('click', event => { const button = event.target.closest('[data-question]'); if (button) submit(button.dataset.question); });
