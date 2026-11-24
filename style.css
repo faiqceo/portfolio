@@ -2936,6 +2936,11 @@ body.profile-body {
   line-height: 20px;
 }
 
+.profile-highlight {
+  color: #1768c1;
+  font-weight: 500;
+}
+
 .profile-copy a {
   color: inherit;
   text-decoration: underline;
