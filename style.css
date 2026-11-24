@@ -2886,6 +2886,25 @@ body.profile-body {
   padding: 80px 0 36px;
 }
 
+#home-page > .profile-header,
+#home-page > .profile-copy,
+#home-page > .profile-projects,
+#home-page > .profile-footer {
+  animation: page-appear 1100ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+#home-page > .profile-copy {
+  animation-delay: 120ms;
+}
+
+#home-page > .profile-projects {
+  animation-delay: 240ms;
+}
+
+#home-page > .profile-footer {
+  animation-delay: 540ms;
+}
+
 .profile-header {
   margin-bottom: 28px;
 }
@@ -2920,6 +2939,7 @@ body.profile-body {
   border-radius: 50%;
   background: #20b66a;
   box-shadow: 0 0 0 3px rgba(32, 182, 106, .14), 0 0 9px rgba(32, 182, 106, .55);
+  animation: availability-glow 2.2s ease-in-out infinite;
 }
 
 .profile-updated {
@@ -2977,19 +2997,19 @@ body.profile-body {
 
 .project-list li {
   border-top: 1px solid #b9d8f4;
-  animation: project-row-enter 700ms cubic-bezier(.22, 1, .36, 1) both;
+  animation: page-appear 1100ms cubic-bezier(.16, 1, .3, 1) both;
 }
 
 .project-list li:nth-child(2) {
-  animation-delay: 80ms;
+  animation-delay: 90ms;
 }
 
 .project-list li:nth-child(3) {
-  animation-delay: 160ms;
+  animation-delay: 180ms;
 }
 
 .project-list li:nth-child(4) {
-  animation-delay: 240ms;
+  animation-delay: 270ms;
 }
 
 .project-list li:last-child {
@@ -3149,6 +3169,15 @@ body.profile-body {
   transition: color 140ms ease;
 }
 
+.project-detail-page:not([hidden]) > .project-back,
+.project-detail-page:not([hidden]) > .project-article {
+  animation: page-appear 1100ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.project-detail-page:not([hidden]) > .project-article {
+  animation-delay: 150ms;
+}
+
 .project-back span {
   display: inline-block;
   margin-right: 4px;
@@ -3219,14 +3248,23 @@ body.profile-body {
   to { clip-path: inset(0); }
 }
 
-@keyframes project-row-enter {
+@keyframes page-appear {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(2px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes availability-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(32, 182, 106, .1), 0 0 6px rgba(32, 182, 106, .3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(32, 182, 106, .2), 0 0 12px rgba(32, 182, 106, .7);
   }
 }
 
@@ -3256,6 +3294,19 @@ body.profile-body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .profile-availability-dot {
+    animation: none;
+  }
+
+  #home-page > .profile-header,
+  #home-page > .profile-copy,
+  #home-page > .profile-projects,
+  #home-page > .profile-footer,
+  .project-detail-page:not([hidden]) > .project-back,
+  .project-detail-page:not([hidden]) > .project-article {
+    animation: none;
+  }
+
   .project-list li {
     animation: none;
   }
