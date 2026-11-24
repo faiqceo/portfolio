@@ -3265,6 +3265,12 @@ body.profile-body {
   margin: 40px 0 48px;
 }
 
+.project-design-figure {
+  max-width: 640px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .project-figure img {
   display: block;
   width: 100%;
