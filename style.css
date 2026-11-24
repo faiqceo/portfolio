@@ -3081,20 +3081,16 @@ body.profile-body {
   font-size: 12px;
 }
 
-.footer-signature {
-  display: block;
-  width: min(100px, 30vw);
-  height: 58px;
-  overflow: visible;
-}
-
-.footer-signature .signature-name {
-  fill: #171717;
-  font-family: "Caveat", "Segoe Script", cursive;
-  font-size: 47px;
-  font-weight: 600;
+.footer-quote {
+  display: inline-block;
+  color: #1768c1;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
   clip-path: inset(0 100% 0 0);
-  animation: signature-write 900ms cubic-bezier(.22, 1, .36, 1) 120ms forwards;
+  animation: quote-write 3.5s linear 120ms forwards;
 }
 
 .profile-footer a {
@@ -3200,7 +3196,7 @@ body.profile-body {
   line-height: 18px;
 }
 
-@keyframes signature-write {
+@keyframes quote-write {
   to { clip-path: inset(0); }
 }
 
@@ -3235,11 +3231,7 @@ body.profile-body {
     transform: none;
   }
 
-  .footer-signature {
-    animation: none;
-  }
-
-  .footer-signature .signature-name {
+  .footer-quote {
     animation: none;
     clip-path: none;
   }
