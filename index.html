@@ -60,7 +60,7 @@
             <li>
               <a href="#project/nepogames" data-project="nepogames"
                 ><span class="project-title-group"
-                  ><img class="project-logo" src="images/nepogames-logo.png" alt="" aria-hidden="true" width="28" height="28" /><span class="project-name">Nepogames</span
+                  ><img class="project-logo" src="images/nepogames-logo.png" alt="" aria-hidden="true" width="20" height="20" /><span class="project-name">Nepogames</span
                   ><span class="new-badge">New</span></span
                 ><span class="project-meta"
                   ><span class="project-type">Gaming</span
@@ -71,7 +71,7 @@
             <li>
               <a href="#project/escrowgo" data-project="escrowgo"
                 ><span class="project-title-group"
-                  ><img class="project-logo" src="images/escrowgo-logo.png" alt="" aria-hidden="true" width="28" height="28" /><span class="project-name">Escrowgo</span></span
+                  ><img class="project-logo" src="images/escrowgo-logo.png" alt="" aria-hidden="true" width="20" height="20" /><span class="project-name">Escrowgo</span></span
                 ><span class="project-meta"
                   ><span class="project-type">Payments</span
                   ><span class="project-arrow" aria-hidden="true">→</span></span
@@ -81,7 +81,7 @@
             <li>
               <a href="#project/xaam" data-project="xaam"
                 ><span class="project-title-group"
-                  ><img class="project-logo" src="images/xaam-logo.svg" alt="" aria-hidden="true" width="28" height="28" /><span class="project-name">Xaam</span></span
+                  ><img class="project-logo" src="images/xaam-logo.svg" alt="" aria-hidden="true" width="20" height="20" /><span class="project-name">Xaam</span></span
                 ><span class="project-meta"
                   ><span class="project-type">Education</span
                   ><span class="project-arrow" aria-hidden="true">→</span></span
@@ -468,6 +468,7 @@
           );
 
           homePage.hidden = Boolean(activePage);
+          projectList.classList.toggle("is-entering", !activePage);
           projectPages.forEach((page) => {
             page.hidden = page !== activePage;
           });
